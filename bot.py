@@ -163,7 +163,6 @@ def start_bot():
 
 
 while True:
-    print("Started successfully!!!!!!!")
     utc_time = datetime.utcnow().hour
     spain_time = utc_time + 1
     if spain_time == 2:
