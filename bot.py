@@ -112,7 +112,7 @@ def start_bot():
     # print(list_of_all_futures_symbols)
 
     initial_price_list = client.futures_symbol_ticker()
-    print(initial_price_list)
+    # print(initial_price_list)
 
     for symbol in list_of_all_futures_symbols:
         for pair in initial_price_list:
@@ -165,7 +165,7 @@ def start_bot():
 while True:
     utc_time = datetime.utcnow().hour
     spain_time = utc_time + 1
-    if spain_time == 2:
+    if spain_time == 13:
         start_bot()
         break
 
