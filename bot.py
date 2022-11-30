@@ -169,7 +169,7 @@ def start_bot():
 while True:
     utc_time = datetime.utcnow().hour
     spain_time = utc_time + 1
-    if spain_time == 13:
+    if spain_time == 2:
         start_bot()
         break
 
