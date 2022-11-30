@@ -123,43 +123,47 @@ def start_bot():
                 conn.commit()
 
     while True:
-        now_price_list = client.futures_symbol_ticker()
-        # print(now_price_list)
-        for symbol in list_of_all_futures_symbols:
-            cursor.execute("select current_price from crypto_rocks_table where symbol = %s", [symbol])
-            r_3 = cursor.fetchall()
-            current_price = float(r_3[0][0])
+        try:
+            now_price_list = client.futures_symbol_ticker()
+            # print(now_price_list)
+            for symbol in list_of_all_futures_symbols:
+                cursor.execute("select current_price from crypto_rocks_table where symbol = %s", [symbol])
+                r_3 = cursor.fetchall()
+                current_price = float(r_3[0][0])
 
-            current_plus_five = (current_price * 105) / 100
-            # print(f"Current price plus ({symbol}) = {current_plus_five}")
-            current_minus_five = (current_price * 95) / 100
-            # print(f"Current price minus ({symbol}) = {current_minus_five}")
-            for pair in now_price_list:
-                if symbol == pair["symbol"]:
-                    now_price = float(pair["price"])
-                    if now_price >= current_plus_five:
-                        percentage_change = ((now_price - current_price) / current_price) * 100
-                        if percentage_change < 10:
-                            cursor.execute("update crypto_rocks_table set current_price = %s where symbol = %s",
-                                           [now_price, symbol])
-                            conn.commit()
-                            t2 = threading.Thread(
-                                target=lambda: send_discord(symbol=symbol, percentage_change=percentage_change,
-                                                            current_price=current_price, now_price=now_price,
-                                                            position_type="SHORT"))
-                            t2.start()
+                current_plus_five = (current_price * 105) / 100
+                # print(f"Current price plus ({symbol}) = {current_plus_five}")
+                current_minus_five = (current_price * 95) / 100
+                # print(f"Current price minus ({symbol}) = {current_minus_five}")
+                for pair in now_price_list:
+                    if symbol == pair["symbol"]:
+                        now_price = float(pair["price"])
+                        if now_price >= current_plus_five:
+                            percentage_change = ((now_price - current_price) / current_price) * 100
+                            if percentage_change < 10:
+                                cursor.execute("update crypto_rocks_table set current_price = %s where symbol = %s",
+                                               [now_price, symbol])
+                                conn.commit()
+                                t2 = threading.Thread(
+                                    target=lambda: send_discord(symbol=symbol, percentage_change=percentage_change,
+                                                                current_price=current_price, now_price=now_price,
+                                                                position_type="SHORT"))
+                                t2.start()
 
-                    if now_price <= current_minus_five:
-                        percentage_change = ((now_price - current_price) / current_price) * 100
-                        if percentage_change > -10:
-                            cursor.execute("update crypto_rocks_table set current_price = %s where symbol = %s",
-                                           [now_price, symbol])
-                            conn.commit()
-                            t3 = threading.Thread(
-                                target=lambda: send_discord(symbol=symbol, percentage_change=percentage_change,
-                                                            current_price=current_price, now_price=now_price,
-                                                            position_type="LONG"))
-                            t3.start()
+                        if now_price <= current_minus_five:
+                            percentage_change = ((now_price - current_price) / current_price) * 100
+                            if percentage_change > -10:
+                                cursor.execute("update crypto_rocks_table set current_price = %s where symbol = %s",
+                                               [now_price, symbol])
+                                conn.commit()
+                                t3 = threading.Thread(
+                                    target=lambda: send_discord(symbol=symbol, percentage_change=percentage_change,
+                                                                current_price=current_price, now_price=now_price,
+                                                                position_type="LONG"))
+                                t3.start()
+        except Exception as e:
+            print(e)
+            pass
 
 
 while True:
