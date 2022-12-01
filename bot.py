@@ -88,7 +88,7 @@ def send_discord(symbol,percentage_change,current_price,now_price,position_type)
 
 
     webhook = SyncWebhook.from_url(
-        "https://discordapp.com/api/webhooks/1045410061960364132/rW-QCqn_qCkZKUsLVfvhCe5nUbI_D9YCPVXUDCTGn-LnNtvbXtsLyD23_fgzvz6W6cbu")
+        "https://discord.com/api/webhooks/1047793816150753281/GSHIpfz12GFu3EKoqF8ff4XW0SvC_gErMaTsLu__E4_orxdgCkGr5rFCQQFUDlWeRVaQ")
     webhook.send(discord_message)
 
 
